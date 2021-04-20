@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import * as qs from "querystring";
-import { encode } from "url-encode-decode";
 import * as axios from "axios";
 import { connection } from "../../../rdb/connect";
 
@@ -12,21 +11,42 @@ before(async () => {
   await connection();
 
   /** 게시글 생성 */
-  const body = qs.stringify({
+  const postBody = qs.stringify({
     title: "title",
     content: "content",
     publisherId: "publisherId",
     publisherPassword: "publisherPassword",
   });
 
-  const result = await axios.default.post(`${baseUrl}/post`, body, {
+  const postResponse = await axios.default.post(`${baseUrl}/post`, postBody, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     withCredentials: true,
   });
   // console.log(result);
-  post = result.data.result;
+  post = postResponse.data.result;
+
+  /** 게시글 댓글 생성 */
+  const postReplyBody = qs.stringify({
+    postWrn: post.wrn,
+    content: "content",
+    publisherId: "publisherId",
+    publisherPassword: "publisherPassword",
+  });
+
+  const postReplyResponse = await axios.default.post(
+    `${baseUrl}/postReply`,
+    postReplyBody,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      withCredentials: true,
+    }
+  );
+  // console.log(result);
+  postReply = postReplyResponse.data.result;
 });
 
 after(async () => {
@@ -45,16 +65,16 @@ after(async () => {
   });
 });
 
-describe("postReplyRoute", () => {
-  it("createPostReply", async () => {
+describe("postSubReplyRoute", () => {
+  it("createPostSubReply", async () => {
     const body = qs.stringify({
-      postWrn: post.wrn,
+      postReplyIndex: postReply.index,
       content: "content",
       publisherId: "publisherId",
       publisherPassword: "publisherPassword",
     });
 
-    const result = await axios.default.post(`${baseUrl}/postReply`, body, {
+    const result = await axios.default.post(`${baseUrl}/postSubReply`, body, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -62,39 +82,6 @@ describe("postReplyRoute", () => {
     });
     // console.log(result);
     postReply = result.data.result;
-    expect(result.data.success).to.be.eqls(true);
-  });
-
-  it("listPostReply", async () => {
-    const queryString = encode(
-      JSON.stringify({
-        queryFilter: {
-          filter: {
-            status: "ACTIVE",
-          },
-          orderBy: [
-            {
-              direction: "DESC",
-              field: "createdAt",
-            },
-          ],
-          pagination: {
-            first: 3,
-            skip: 0,
-          },
-        },
-      })
-    );
-    let result = await axios.default.get(
-      `${baseUrl}/postReplies/postWrn/${post.wrn}?${queryString}`,
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        withCredentials: true,
-      }
-    );
-    // console.log(result);
     expect(result.data.success).to.be.eqls(true);
   });
 });

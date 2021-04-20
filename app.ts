@@ -2,6 +2,7 @@ import * as bodyParser from "body-parser";
 import * as express from "express";
 import { postRoute } from "./apis/post/routes/post.route";
 import { postReplyRoute } from "./apis/post/routes/postReply.route";
+import { postSubReplyRoute } from "./apis/post/routes/postSubReply.route";
 import { notFoundError, serverError } from "./middlewares/error.middleware";
 
 export class Server {
@@ -21,6 +22,7 @@ export class Server {
     /** 라우터 추가 */
     this.app.use(postRoute.postRouter);
     this.app.use(postReplyRoute.postReplyRouter);
+    this.app.use(postSubReplyRoute.postSubReplyRouter);
 
     /** 라우터 오류 처리 */
     this.app.use(notFoundError);
