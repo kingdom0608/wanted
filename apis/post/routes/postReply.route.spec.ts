@@ -28,6 +28,22 @@ before(async () => {
   post = result.data.result;
 });
 
+after(async () => {
+  const body = qs.stringify({
+    wrn: post.wrn,
+    publisherPassword: "publisherPassword",
+  });
+
+  const result = await axios.default.delete(`${baseUrl}/post`, {
+    data: body,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    withCredentials: true,
+  });
+  // console.log(result);
+});
+
 describe("postReplyRoute", () => {
   it("createPostReply", async () => {
     const body = qs.stringify({
@@ -77,7 +93,7 @@ describe("postReplyRoute", () => {
         withCredentials: true,
       }
     );
-    console.log(result.data);
+    // console.log(result);
     expect(result.data.success).to.be.eqls(true);
   });
 });

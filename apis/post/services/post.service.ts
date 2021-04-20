@@ -89,6 +89,10 @@ export class PostService {
     try {
       let post: Post = null;
 
+      if (!/^[a-zA-Z]{10,20}$/.test(postData.publisherPassword)) {
+        throw new Error("Invalid publisher password format");
+      }
+
       /** 게시글 생성 */
       post = await Post.create({
         title: postData.title,

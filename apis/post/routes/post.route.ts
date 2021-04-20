@@ -60,6 +60,13 @@ async function createPost(req, res) {
     });
   } catch (err) {
     switch (err.message) {
+      case "Invalid publisher password format":
+        res.send({
+          success: false,
+          statusCode: 400,
+          message: "createPost: 40001",
+        });
+        break;
       default:
         res.send({
           success: false,
