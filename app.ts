@@ -13,7 +13,7 @@ export class Server {
     this.app = express();
     /** 서버 헬스체크 */
     this.app.get("/console", function (req, res) {
-      res.send("wanted-server is Running");
+      res.send("wanted is Running");
     });
     /** bodyParser 선언 */
     this.app.use(bodyParser.urlencoded({ extended: false }));

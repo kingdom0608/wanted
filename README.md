@@ -1,4 +1,4 @@
-# wanted-server
+# wanted
 
 <hr>
 

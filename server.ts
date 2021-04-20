@@ -17,7 +17,7 @@ app
       chalk.rgb(0, 153, 255)`MYSQL_PASSWORD:`,
       config.get().mysql.password
     );
-    console.log("wanted server listening on port", port);
+    console.log("wanted listening on port", port);
 
     await connection();
   })
